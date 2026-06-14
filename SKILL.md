@@ -29,6 +29,14 @@ Always lock concrete visual facts, not generic scene labels.
 - UI/text: decide whether text belongs in the static reference image or must be a blank placeholder for post overlay.
 - Reference marks: arrows, boxes, labels, watermarks, and guide borders in reference images must usually be excluded from generated output.
 
+## Approved Versus Rough References
+
+Do not treat a visually useful image as approved if arrows, corner crop marks, black/white frame borders, direction curves, composition labels, or teaching annotations are drawn into the image.
+
+- Approved reference: clean frame, no guide marks, safe to feed into video generation.
+- Rough reference: useful for explaining composition, but must stay in rejected/drafts and be regenerated or cleaned before video handoff.
+- If a rough reference must be used to explain a follow-up prompt, explicitly say: "Use only the layout/pose; do not copy arrows, borders, labels, or guide marks."
+
 ## Prompt Pattern
 
 Use this structure for any fragile follow-up shot:
@@ -66,6 +74,7 @@ P1 fix before video handoff:
 - Props move to the wrong side or lose story meaning.
 - Character wardrobe/age/identity drifts.
 - Reference arrows, borders, labels, or watermarks are copied into the new frame.
+- The frame is otherwise useful but contains visible guide arrows, border/crop marks, or composition annotations.
 - The scene is technically similar but loses important landmarks needed for video stability.
 
 P2 note or polish:
