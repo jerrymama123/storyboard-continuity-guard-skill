@@ -1,0 +1,4 @@
+interface:
+  display_name: "分镜连续性守门"
+  short_description: "审核线稿场景参考图视频指导帧的空间方向和角色道具连续性"
+  default_prompt: "Use $storyboard-continuity-guard to audit these storyboard frames, scene references, and video guidance images for spatial continuity, POV constraints, and prompt fixes."
