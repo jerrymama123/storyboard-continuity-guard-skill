@@ -36,6 +36,7 @@ Do not treat a visually useful image as approved if arrows, corner crop marks, b
 - Approved reference: clean frame, no guide marks, safe to feed into video generation.
 - Rough reference: useful for explaining composition, but must stay in rejected/drafts and be regenerated or cleaned before video handoff.
 - If a rough reference must be used to explain a follow-up prompt, explicitly say: "Use only the layout/pose; do not copy arrows, borders, labels, or guide marks."
+- Character sheets or scene cards with text panels, labels, biographies, system UI, phone text, or A/B/C choice overlays are not video-safe approved references. Treat them as identity/story rough references until a clean no-text crop/version exists.
 
 ## Prompt Pattern
 
@@ -75,6 +76,7 @@ P1 fix before video handoff:
 - Character wardrobe/age/identity drifts.
 - Reference arrows, borders, labels, or watermarks are copied into the new frame.
 - The frame is otherwise useful but contains visible guide arrows, border/crop marks, or composition annotations.
+- Character/scene/prop reference images contain large text panels or baked-in UI that could be learned by the video model.
 - The scene is technically similar but loses important landmarks needed for video stability.
 
 P2 note or polish:
