@@ -60,6 +60,26 @@ Reference-image cleanup:
 
 For any fragile location, do not rely on a generic label such as "old stairwell", "office corridor", "hospital room", "apartment", "alley", or "cat cafe." Write concrete facts like "phone stays in left foreground, right-side wall pipes/handrail/doorframe stay on the right, upper door stays right of center, stairs continue upward then left-turn at the far landing, forbid mirrored right-turn." The examples can change; the rule is to lock physical anchors, not mood labels.
 
+## Axis Turns And Newly Featured Objects
+
+When a shot suddenly features a door, vehicle, table, elevator, window, weapon, screen, animal, or other major object that was not dominant in the previous frame, the prompt must make the transition legible.
+
+- State whether it is the same physical space with a camera/POV turn, a motivated cut, or a new location.
+- Keep at least one previous spatial anchor visible when possible: same wall texture, floor, railing, lamp, window, doorframe, furniture edge, character in background, or prop in foreground.
+- Use language like "POV turns 35 degrees right from the previous frame toward the nearby door lock" or "camera pans from the character to the table in the same room" instead of simply naming the new object.
+- If the object was only in the background before, say so: "the background door from the prior frame now becomes the right-foreground door lock."
+- Flag as P1 if the object is script-correct but visually feels like it appears from nowhere. Regenerate or add a bridge prompt before video handoff.
+
+## Room And Furniture Map Continuity
+
+Interior scenes need a room map, not just a room label. Once a space is established, furniture sides and large landmarks must not drift between adjacent shots.
+
+- Write a canonical room map before generating close-ups: "bed/sofa on left rear wall, old TV/cabinet on right rear wall, main door rear center, table foreground", or the equivalent for that scene.
+- For every later shot in that room, restate the landmarks that should remain visible or implied. A close-up may crop furniture, but it must not mirror the map.
+- If one frame flips bed/sofa, cabinet, window, door, desk, lamp, or shelf positions while the surrounding frames agree, reject the outlier rather than regenerating the whole sequence.
+- Treat a mirrored furniture map as P0 when it changes navigation, blocking, or video continuity; treat it as P1 when the story still works but the video handoff would look unstable.
+- Do not use a reference image with a different room map as the main prompt reference. If it is only a mood or texture reference, explicitly say "use texture only, do not copy layout."
+
 ## POV Micro-Action And Small Prop Repair
 
 When an image model repeatedly misdraws hands, object ownership, or left/right anatomy, stop asking for a specific hand unless that hand orientation is story-critical. Reduce the action to visible evidence at the frame edge.
@@ -79,6 +99,7 @@ This applies to any short-drama prop or micro-action: paper, card, phone, key, r
 P0 regenerate immediately:
 
 - The scene becomes a different location or a mirrored version of the location.
+- A room's furniture map flips or relocates major landmarks without a script reason.
 - A left turn becomes a right turn, or the camera axis reverses without script reason.
 - POV owner appears as a face, body, back, half-body, or full reflection when the project is first-person POV.
 - A different character is introduced or a required visible character disappears.
@@ -94,6 +115,7 @@ P1 fix before video handoff:
 - Character/scene/prop reference images contain large text panels or baked-in UI that could be learned by the video model.
 - The scene is technically similar but loses important landmarks needed for video stability.
 - A full hand or full arm is drawn where local evidence such as sleeve edge, fingertip, partial knuckles, shadow, reflection, contact point, or implied object movement would be safer and clearer.
+- A script-correct door/object/screen/vehicle enters as the new focus, but the frame fails to show how the camera got there from the previous shot.
 
 P2 note or polish:
 
@@ -112,9 +134,11 @@ Before approving a frame, answer:
 
 - Does it continue the same physical space from the previous approved frame?
 - Are left/right relationships unchanged?
+- For interiors, does the furniture map match the canonical room map?
 - Are the POV owner constraints respected?
 - Are required characters visible and only allowed characters visible?
 - Are story-critical props in the correct place?
+- If a new object becomes dominant, is the camera turn/cut motivated and anchored to the previous frame?
 - If a full hand is not required, did the prompt reduce it to local evidence such as sleeve edge, fingertip, partial knuckles, shadow, reflection, contact point, or implied prop movement?
 - Are annotations excluded from the generated image?
 - Is any UI/text appropriate for this artifact type?
