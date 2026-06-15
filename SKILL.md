@@ -60,6 +60,16 @@ Reference-image cleanup:
 
 For the stairwell case that caused this skill: do not write only "old rental stairwell." Write facts like "phone stays in left foreground, right-side wall pipes/handrail/doorframe stay on the right, upper door stays right of center, stairs continue upward then left-turn at the far landing, forbid mirrored right-turn."
 
+## POV Hand And Hidden Prop Repair
+
+When an image model repeatedly draws the wrong left/right hand, stop asking for a specific hand unless the hand orientation is story-critical. Reduce the action to visible evidence at the frame edge.
+
+- Prefer sleeve edge, wrist edge, cloth fold, pocket gap, or two to three partial knuckles over a full palm.
+- For hidden papers, cards, receipts, or contracts, say the prop peeks from a coat/pocket gap; forbid a full sheet, folder, bag, table placement, and a hand holding the paper.
+- If a hand is not the story point, describe the result instead of the anatomy: "coat edge is pressed inward", "paper corner is tucked deeper", "screen glow touches the knuckles".
+- Do not let a prop-placement problem become a POV-owner body problem. The POV owner remains off-screen except for minimal hands/sleeves/props.
+- When a generated frame keeps creating bad hands, the retry prompt should explicitly say: "do not draw a complete hand; do not emphasize left hand or right hand; show only sleeve edge or a few local knuckles."
+
 ## Review Rules
 
 P0 regenerate immediately:
@@ -69,6 +79,7 @@ P0 regenerate immediately:
 - POV owner appears as a face, body, back, half-body, or full reflection when the project is first-person POV.
 - A different character is introduced or a required visible character disappears.
 - Readable UI/text appears in a video-reference prompt where it should be post overlay only.
+- A POV hidden prop becomes a full sheet, folder, bag, or visible body/arm action that changes the story logic.
 
 P1 fix before video handoff:
 
@@ -78,6 +89,7 @@ P1 fix before video handoff:
 - The frame is otherwise useful but contains visible guide arrows, border/crop marks, or composition annotations.
 - Character/scene/prop reference images contain large text panels or baked-in UI that could be learned by the video model.
 - The scene is technically similar but loses important landmarks needed for video stability.
+- A full hand is drawn where a sleeve edge, partial knuckles, or implied cloth movement would be safer and clearer.
 
 P2 note or polish:
 
@@ -99,6 +111,7 @@ Before approving a frame, answer:
 - Are the POV owner constraints respected?
 - Are required characters visible and only allowed characters visible?
 - Are story-critical props in the correct place?
+- If a full hand is not required, did the prompt reduce it to sleeve/partial knuckles or an implied cloth/prop movement?
 - Are annotations excluded from the generated image?
 - Is any UI/text appropriate for this artifact type?
 - Would this image help video generation stay stable, or teach the video model the wrong thing?
