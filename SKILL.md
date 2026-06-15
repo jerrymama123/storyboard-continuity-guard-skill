@@ -23,7 +23,7 @@ Always lock concrete visual facts, not generic scene labels.
 
 - Direction: left turn, right turn, stairs up/down, door side, hallway bend, camera axis.
 - Layout: foreground/midground/background, wall side, door position, window position, handrail, pipes, lamps, table edge.
-- Props: phone side, contract/paper corner, key position, bag, door lock, screen glow.
+- Props: exact prop type, side, scale, orientation, contact point, occlusion state, screen glow, and whether the prop is held, hidden, dropped, offered, inserted, or only implied.
 - Characters: who may appear, where they stand, wardrobe continuity, expression continuity, distance to camera.
 - POV owner: hands/sleeves/phone/props may appear; face, body, back, full reflection, or mirror-body must not appear unless explicitly allowed.
 - UI/text: decide whether text belongs in the static reference image or must be a blank placeholder for post overlay.
@@ -58,17 +58,21 @@ Reference-image cleanup:
 - Use arrows/labels/boxes only to understand composition; do not draw them in the new image.
 ```
 
-For the stairwell case that caused this skill: do not write only "old rental stairwell." Write facts like "phone stays in left foreground, right-side wall pipes/handrail/doorframe stay on the right, upper door stays right of center, stairs continue upward then left-turn at the far landing, forbid mirrored right-turn."
+For any fragile location, do not rely on a generic label such as "old stairwell", "office corridor", "hospital room", "apartment", "alley", or "cat cafe." Write concrete facts like "phone stays in left foreground, right-side wall pipes/handrail/doorframe stay on the right, upper door stays right of center, stairs continue upward then left-turn at the far landing, forbid mirrored right-turn." The examples can change; the rule is to lock physical anchors, not mood labels.
 
-## POV Hand And Hidden Prop Repair
+## POV Micro-Action And Small Prop Repair
 
-When an image model repeatedly draws the wrong left/right hand, stop asking for a specific hand unless the hand orientation is story-critical. Reduce the action to visible evidence at the frame edge.
+When an image model repeatedly misdraws hands, object ownership, or left/right anatomy, stop asking for a specific hand unless that hand orientation is story-critical. Reduce the action to visible evidence at the frame edge.
 
-- Prefer sleeve edge, wrist edge, cloth fold, pocket gap, or two to three partial knuckles over a full palm.
-- For hidden papers, cards, receipts, or contracts, say the prop peeks from a coat/pocket gap; forbid a full sheet, folder, bag, table placement, and a hand holding the paper.
-- If a hand is not the story point, describe the result instead of the anatomy: "coat edge is pressed inward", "paper corner is tucked deeper", "screen glow touches the knuckles".
-- Do not let a prop-placement problem become a POV-owner body problem. The POV owner remains off-screen except for minimal hands/sleeves/props.
-- When a generated frame keeps creating bad hands, the retry prompt should explicitly say: "do not draw a complete hand; do not emphasize left hand or right hand; show only sleeve edge or a few local knuckles."
+This applies to any short-drama prop or micro-action: paper, card, phone, key, ring, medicine, lipstick, badge, weapon, ticket, receipt, USB drive, pet collar, food, cup, bag strap, door handle, sleeve, pocket, or any small object that can drift in generated images.
+
+- Prefer sleeve edge, wrist edge, cloth fold, pocket gap, tabletop contact, shadow, reflection, partial knuckles, fingertip, or object movement over a full palm or full arm.
+- For hidden or partially revealed props, say exactly where and how much is visible: peeking from a pocket, half under a phone, pressed under a cup, reflected on glass, caught in a door gap, tucked under fabric, or barely visible at frame edge.
+- Forbid the common wrong expansions: full sheet, folder, bag, oversized object, table placement when it should be hidden, hand holding when it should only peek out, or readable text when the prop should be blank.
+- If the hand is not the story point, describe the result instead of the anatomy: "fabric edge is pressed inward", "object corner is tucked deeper", "screen glow touches the knuckles", "key ring swings slightly", "cup shadow covers the receipt".
+- Do not let a prop-placement problem become a POV-owner body problem. The POV owner remains off-screen except for the minimum visible hand/sleeve/prop evidence required by the shot.
+- When a generated frame keeps creating bad hands, the retry prompt should explicitly say: "do not draw a complete hand; do not emphasize left hand or right hand; show only the needed local evidence such as sleeve edge, fingertip, partial knuckles, object edge, shadow, or contact point."
+- If a model keeps ignoring a subtle action, make the action easier to see without changing the story: increase prop scale slightly, move it closer to a light source, use a stronger shadow/contact point, or crop closer, but do not invent a new location or new visible character.
 
 ## Review Rules
 
@@ -79,7 +83,7 @@ P0 regenerate immediately:
 - POV owner appears as a face, body, back, half-body, or full reflection when the project is first-person POV.
 - A different character is introduced or a required visible character disappears.
 - Readable UI/text appears in a video-reference prompt where it should be post overlay only.
-- A POV hidden prop becomes a full sheet, folder, bag, or visible body/arm action that changes the story logic.
+- A POV small prop or hidden object expands into a different object, a full-size object, an unplanned bag/folder/container, or a visible body/arm action that changes the story logic.
 
 P1 fix before video handoff:
 
@@ -89,7 +93,7 @@ P1 fix before video handoff:
 - The frame is otherwise useful but contains visible guide arrows, border/crop marks, or composition annotations.
 - Character/scene/prop reference images contain large text panels or baked-in UI that could be learned by the video model.
 - The scene is technically similar but loses important landmarks needed for video stability.
-- A full hand is drawn where a sleeve edge, partial knuckles, or implied cloth movement would be safer and clearer.
+- A full hand or full arm is drawn where local evidence such as sleeve edge, fingertip, partial knuckles, shadow, reflection, contact point, or implied object movement would be safer and clearer.
 
 P2 note or polish:
 
@@ -111,7 +115,7 @@ Before approving a frame, answer:
 - Are the POV owner constraints respected?
 - Are required characters visible and only allowed characters visible?
 - Are story-critical props in the correct place?
-- If a full hand is not required, did the prompt reduce it to sleeve/partial knuckles or an implied cloth/prop movement?
+- If a full hand is not required, did the prompt reduce it to local evidence such as sleeve edge, fingertip, partial knuckles, shadow, reflection, contact point, or implied prop movement?
 - Are annotations excluded from the generated image?
 - Is any UI/text appropriate for this artifact type?
 - Would this image help video generation stay stable, or teach the video model the wrong thing?
